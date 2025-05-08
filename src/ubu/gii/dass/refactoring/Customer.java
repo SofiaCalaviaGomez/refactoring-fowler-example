@@ -39,7 +39,7 @@
 				double thisAmount = 0;
 				Rental each = rentals.next();
 				// determine amounts for each line
-				thisAmount = extracted(thisAmount, each);
+				thisAmount = each.extracted(thisAmount);
 				
 				// add frequent renter points
 				frequentRenterPoints++;
@@ -57,24 +57,5 @@
 			result += "You earned " + String.valueOf(frequentRenterPoints)
 					+ " frequent renter points";
 			return result;
-		}
-
-		private double extracted(double rentalCharge, Rental CurrentRental) {
-			switch (CurrentRental.getMovie().getPriceCode()) {
-			case Movie.REGULAR:
-				rentalCharge += 2;
-				if (CurrentRental.getDaysRented() > 2)
-					rentalCharge += (CurrentRental.getDaysRented() - 2) * 1.5;
-				break;
-			case Movie.NEW_RELEASE:
-				rentalCharge += CurrentRental.getDaysRented() * 3;
-				break;
-			case Movie.CHILDRENS:
-				rentalCharge += 1.5;
-				if (CurrentRental.getDaysRented() > 3)
-					rentalCharge += (CurrentRental.getDaysRented() - 3) * 1.5;
-				break;
-			}
-			return rentalCharge;
 		}	
 	}
