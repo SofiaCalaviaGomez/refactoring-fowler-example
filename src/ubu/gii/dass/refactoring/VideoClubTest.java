@@ -1,5 +1,7 @@
 package ubu.gii.dass.refactoring;
 
+
+
 import static org.junit.Assert.*;
 
 import org.junit.After;
@@ -19,7 +21,7 @@ import org.junit.Test;
  */
 public class VideoClubTest {
 	protected Movie m0, m11, m12, m2;
-	protected Customer c1;
+	protected Customer c1,c2;
 	
 	@Before
 	public void setUp() {
@@ -55,5 +57,30 @@ public class VideoClubTest {
 		assertTrue("Calcula mal el alquiler", salidaEsperada.equals(salida));
 
 	}
+	
+	@Test
+    public void testHtmlAlquiler() {
+		c2 = new Customer("Manuel");
+        Rental r1 = new Rental(m11, 5);
+        Rental r2 = new Rental(m0, 1);
+        Rental r3 = new Rental(m2, 10);
+
+        c2.addRental(r1);
+        c2.addRental(r2);
+        c2.addRental(r3);
+
+        String salida = c2.htmlStatement();
+
+        String salidaEsperada = "<H1>Rental Record for Manuel</H1>\n"
+                + "<H2>Sky Captain 15.0</H2>\n"
+                + "<H2>Accion Mutante 2.0</H2>\n"
+                + "<H2>Hermano Oso 12.0</H2>\n"
+                + "<P>Amount owed is 29.0</P>\n"
+                + "<P>You earned 4 frequent renter points</P>\n";
+
+        assertTrue("Calcula mal el alquiler",salidaEsperada.equals(salida));
+
+}
+
 
 }

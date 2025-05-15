@@ -13,46 +13,37 @@
 	import java.util.*;
 	
 	public class Customer {
-		private String _name;
-		private List<Rental> _rentals;
-	
-		public Customer(String name) {
-			_name = name;
-			_rentals = new ArrayList<Rental>();
-	
-		};
-	
-		public void addRental(Rental arg) {
-			_rentals.add(arg);
-		}
-	
-		public String getName() {
-			return _name;
-		};
-	
-		public String statement() {
-			double totalAmount = 0;
-			int frequentRenterPoints = 0;
-			Iterator<Rental> rentals = _rentals.iterator();
-			String result = "Rental Record for " + getName() + "\n";
-			while (rentals.hasNext()) {
-				double thisAmount = 0;
-				Rental each = rentals.next();
-				// determine amounts for each line
-				thisAmount = each.getCharge();
-				
-				// add frequent renter points
-				frequentRenterPoints += each.getFrequentRenterPoints();
-				// show figures for this rental
-				result += "\t" + each.getMovie().getTitle() + "\t"
-						+ String.valueOf(thisAmount) + "\n";
-				totalAmount += thisAmount;
-			}
-			// add footer lines
-			result += "Amount owed is " + String.valueOf(totalAmount) + "\n";
-			result += "You earned " + String.valueOf(frequentRenterPoints)
-					+ " frequent renter points";
-			return result;
-		}	
-	
+	    private String _name;
+	    private List<Rental> _rentals = new ArrayList<>();
+	    public Customer(String name) {
+	        _name = name;
+	    }
+	    public void addRental(Rental arg) {
+	        _rentals.add(arg);
+	    }
+	    public String getName() {
+	        return _name;
+	    }
+	    public String htmlStatement() {
+	        return generateStatement(new HtmlStatementFormatter());
+	    }
+	    public String statement() {
+	        return generateStatement(new TextStatementFormatter());
+	    }
+	    private String generateStatement(StatementFormatter formatter) {
+	        double totalAmount = 0;
+	        int frequentRenterPoints = 0;
+	        Iterator<Rental> rentals = _rentals.iterator();
+	        StringBuilder result = new StringBuilder(formatter.header(getName()));
+
+	        while (rentals.hasNext()) {
+	            Rental each = rentals.next();
+	            double thisAmount = each._movie.getCharge(each);
+	            frequentRenterPoints += each._movie.getFrequentRenterPoints(each);
+	            result.append(formatter.lineItem(each.getMovie().getTitle(), thisAmount));
+	            totalAmount += thisAmount;
+	        }
+	        result.append(formatter.footer(totalAmount, frequentRenterPoints));
+	        return result.toString();
+	    }
 	}
